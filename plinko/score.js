@@ -11,19 +11,21 @@ function distance(pointA,pointB){
 }
 
 function runAnalysis() {
-    const [testSet,trainingSet]=splitDataset(outputs,10)
+    const testSetSize=10
+    var [testSet, trainingSet] = splitDataset(outputs,testSetSize);
 
-    console.log(trainingSet);
-
-    for(let i=0;i<=testSet.length;i++){
+    let numberCorrect=0;
+    for(let i=0;i<testSet.length;i++){
       const bucket = knn(trainingSet,testSet[i][0])
+      if(bucket===testSet[i][3]){
+        numberCorrect++
+      }
     }
-
-    console.log(bucket)
-
+    
+    console.log('acuracy', numberCorrect/testSetSize);
 }
 
-function knn(data,point){
+function knn(data,point) {
  return _.chain(data)
     .map(row => [distance(row[0],point),row[3]])
     .sortBy(row=>row[0])
@@ -39,8 +41,8 @@ function knn(data,point){
 
 
 function splitDataset(data,testCount){
-  const shuffeld=_.shuffle(data);
-  const testSet=_.slice(shuffeld,0,testCount);
-  const trainingSet=_.slice(shuffeld,testCount);
+  const shuffeld = _.shuffle(data);
+  const testSet = _.slice(shuffeld, 0, testCount);
+  const trainingSet = _.slice(shuffeld, testCount);
   return [testSet,trainingSet];
 }
